@@ -99,6 +99,9 @@ bool Walk::step() {
 void Walk::drawPath(unsigned prev_x, unsigned prev_y) {
     if (curr_x == start_x && curr_y == start_y) return;
     if (curr_x == dest_x && curr_y == dest_y) return;
+
+    double slope = ((double)curr_y - double(prev_y))/((double)curr_x - (double)prev_x);
+    double fracportion = 0;
     image.getPixel(curr_x, curr_y) = HSLAPixel(240, 1, 0.5);
 }
 
