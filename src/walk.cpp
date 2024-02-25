@@ -107,7 +107,7 @@ void Walk::drawPath(unsigned prev_x, unsigned prev_y) {
     std::cout << "slope: " << slope << std::endl;
     std::cout << std::endl;
 
-    HSLAPixel pix(240, 1, 0.5);
+    HSLAPixel pix(rand() % 360, 1, 0.5);
 
     unsigned temp_x = prev_x;
     unsigned temp_y = prev_y;

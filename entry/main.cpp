@@ -14,12 +14,13 @@ int main() {
     walk.setStart(0,0);
     walk.setDest(49,49);
 
-    // for (unsigned i = 0; i < 3; i++) walk.step();
+    // // for (unsigned i = 0; i < 3; i++) walk.step();
     walk.step();
     walk.step();
     walk.step();
     walk.step();
     walk.step();
+    // while (!walk.check_status()) walk.step();
 
     walk.draw("output.png");
 
