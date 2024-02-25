@@ -41,4 +41,6 @@ class Walk {
 
 
     void drawPath(unsigned prev_x, unsigned prev_y);//draws in the path taken from the previous point to the new curr_x, curr_y
+
+    bool touchNeighbor(int x, int y, int goalx, int goaly);
 };

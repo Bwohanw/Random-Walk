@@ -1,6 +1,7 @@
 #include "walk.h"
 #include <stdlib.h>
 #include <iostream>
+#include <math.h>
 
 using namespace cs225;
 
@@ -100,11 +101,114 @@ void Walk::drawPath(unsigned prev_x, unsigned prev_y) {
     if (curr_x == start_x && curr_y == start_y) return;
     if (curr_x == dest_x && curr_y == dest_y) return;
 
-    double slope = ((double)curr_y - double(prev_y))/((double)curr_x - (double)prev_x);
-    double fracportion = 0;
-    image.getPixel(curr_x, curr_y) = HSLAPixel(240, 1, 0.5);
+
+    double slope = std::abs(((double)curr_y - double(prev_y))/((double)curr_x - (double)prev_x));
+    double fracportion = 0.0;
+    std::cout << "slope: " << slope << std::endl;
+    std::cout << std::endl;
+
+    HSLAPixel pix(240, 1, 0.5);
+
+    unsigned temp_x = prev_x;
+    unsigned temp_y = prev_y;
+
+    //check if you move right or left
+    if (curr_x >= prev_x) {//move right, paint from prev_x,prev_y->(curr_x,curr_y)
+
+        bool touchedGoal = false;
+        for (unsigned i = prev_x; i < curr_x; i++) {
+            fracportion += slope;
+            unsigned numpixels = std::floor(fracportion);
+            //move up or down
+            if (curr_y >= prev_y) {//paint down
+                for (unsigned j = 0; j <= numpixels && prev_y + j < curr_y; j++) {
+                    //only color if you're still far from the destination pixel
+                    if (!touchedGoal) image.getPixel(i, prev_y + j) = pix;
+                    if (!touchedGoal && touchNeighbor(i,prev_y + j, curr_x, curr_y)) touchedGoal = true;
+                }
+                prev_y += numpixels;
+                if (prev_y >= image.height()) prev_y = image.height() - 1;
+            } else {//paint up
+                for (unsigned j = 0; j <= numpixels && prev_y >= j; j++) {
+                    if (!touchedGoal) image.getPixel(i, prev_y - j) = pix;
+                    if (!touchedGoal && touchNeighbor(i,prev_y-j,curr_x,curr_y)) touchedGoal = true;
+                }
+                prev_y = prev_y >= numpixels ? prev_y - numpixels : 0;
+            }
+
+            fracportion = fracportion - numpixels;
+        }
+
+        //take care of the remaining y distance towards the goal
+        //we've already drawn pixels until curr_x, so we just need to draw vertical pixels until reaching curr_y
+
+        if (!touchedGoal) {
+            if (curr_y >= prev_y) {
+                while (prev_y < curr_y) {
+                    image.getPixel(curr_x, prev_y) = pix;
+                    prev_y++;
+                }
+            } else {
+                while (prev_y > curr_y) {
+                    image.getPixel(curr_x, prev_y) = pix;
+                    prev_y--;
+                }
+            }
+        }
+    } else {//move left
+        bool touchedGoal = false;
+        for (unsigned i = prev_x; i > curr_x; i--) {
+            fracportion += slope;
+            unsigned numpixels = std::floor(fracportion);
+
+            if (curr_y >= prev_y) {
+                for (unsigned j = 0; j <= numpixels && prev_y + j < curr_y; j++) {
+                    if (!touchedGoal) image.getPixel(i, prev_y + j) = pix;
+                    if (!touchedGoal && touchNeighbor(i,prev_y + j, curr_x, curr_y)) touchedGoal = true;
+                }
+                prev_y += numpixels;
+                if (prev_y >= image.height()) prev_y = image.height() - 1;
+            } else {
+                for (unsigned j = 0; j <= numpixels && prev_y >= j; j++) {
+                    if (!touchedGoal) image.getPixel(i, prev_y - j) = pix;
+                    if (!touchedGoal && touchNeighbor(i,prev_y-j,curr_x,curr_y)) touchedGoal = true;
+                }
+                prev_y = prev_y >= numpixels ? prev_y - numpixels : 0;
+            }
+
+            fracportion -= numpixels;
+        }
+        if (!touchedGoal) {
+            if (curr_y >= prev_y) {
+                while (prev_y < curr_y) {
+                    image.getPixel(curr_x, prev_y) = pix;
+                    prev_y++;
+                }
+            } else {
+                while (prev_y > curr_y) {
+                    image.getPixel(curr_x, prev_y) = pix;
+                    prev_y--;
+                }
+            }
+        }
+    }
+
+    //recolors the start/dest in case they got colored over
+    image.getPixel(curr_x, curr_y) = HSLAPixel(100, 1, 0.5);
+    image.getPixel(temp_x, temp_y) = HSLAPixel(100, 1, 0.5);
 }
 
 bool Walk::check_status() {
     return curr_x == dest_x && curr_y == dest_y;
+}
+
+
+bool Walk::touchNeighbor(int x, int y, int goalx, int goaly) {
+    if (x == goalx) {
+        return std::abs(y - goaly) <= 1;
+    }
+    if (y == goaly) {
+        return std::abs(x-goalx) <= 1;
+    }
+    return (std::abs(x-goalx) + std::abs(y-goaly)) <= 2;
 }
