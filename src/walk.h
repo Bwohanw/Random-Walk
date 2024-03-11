@@ -1,6 +1,10 @@
+#pragma once
+
+
 
 #include "../lib/cs225/PNG.h"
 #include <iostream>
+
 
 using namespace cs225;
 
@@ -10,13 +14,13 @@ class Walk {
     
     Walk(unsigned width, unsigned height);//creates a walk on a canvas with the specified size;
 
-
     //Only use setStart and setDest once
     void setStart(unsigned x, unsigned y);//specifies where the start point is
     //if not used, startpoint defaults to (0,0)
 
     void setDest(unsigned x, unsigned y);//specifies where the destination point is
     //if not used, endpoint defaults to (0,0)
+
 
 
     bool check_status();//returns true if at destination, false otherwise
@@ -28,7 +32,11 @@ class Walk {
     void draw(std::string fileName);
 
 
-    private:
+
+    protected:
+    void drawPath(unsigned prev_x, unsigned prev_y);//draws in the path taken from the previous point to the new curr_x, curr_y
+
+    // private:
     unsigned start_x;
     unsigned start_y;
     unsigned dest_x;
@@ -40,7 +48,6 @@ class Walk {
     PNG image;
 
 
-    void drawPath(unsigned prev_x, unsigned prev_y);//draws in the path taken from the previous point to the new curr_x, curr_y
 
     bool touchNeighbor(int x, int y, int goalx, int goaly);
 };

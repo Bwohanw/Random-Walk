@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../src/walk.h"
+#include "../src/triangledist.h"
 #include "../lib/cs225/PNG.h"
 
 
@@ -10,19 +11,28 @@ using namespace cs225;
 
 int main() {
 
-    Walk walk;
+
+    TriangleDist walk;
     walk.setStart(0,0);
     walk.setDest(49,49);
 
-    // // for (unsigned i = 0; i < 3; i++) walk.step();
     walk.step();
     walk.step();
-    walk.step();
-    walk.step();
-    walk.step();
-    // while (!walk.check_status()) walk.step();
-
     walk.draw("output.png");
+
+    // Walk walk;
+    // walk.setStart(0,0);
+    // walk.setDest(49,49);
+
+    // // // for (unsigned i = 0; i < 3; i++) walk.step();
+    // walk.step();
+    // walk.step();
+    // walk.step();
+    // walk.step();
+    // walk.step();
+    // // while (!walk.check_status()) walk.step();
+
+    // walk.draw("output.png");
 
     // png.writeToFile("./output.png");
     return 0;
