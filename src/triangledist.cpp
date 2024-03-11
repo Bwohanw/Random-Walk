@@ -16,25 +16,41 @@ bool TriangleDist::step() {
 
     double prob = (rand() % 100) / 100.0;
 
-    std::cout << "prob: " << prob << std::endl;
 
     unsigned cbest = lower;
     double probbest = 0;
-    probability(lower, upper, 1);
     for (unsigned potential = lower; potential <= upper; potential++) {
-        // double cprob = probability(lower, upper, potential);
-        // if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
-        //     cbest = potential;
-        //     probbest = cprob;
-        // }
+        double cprob = probability(lower, upper, potential);
+        if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
+            cbest = potential;
+            probbest = cprob;
+        }
     }
+
+
+    unsigned displacex = cbest;
+    //displace y
+
+    prob = (rand() % 100) / 100.0;
+
+
+    cbest = lower;
+    probbest = 0;
+    for (unsigned potential = lower; potential <= upper; potential++) {
+        double cprob = probability(lower, upper, potential);
+        if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
+            cbest = potential;
+            probbest = cprob;
+        }
+    }
+
+
+    unsigned displacey = cbest;
 
 
     unsigned prev_x = curr_x;
     unsigned prev_y = curr_y;
 
-    unsigned displacex = cbest;
-    unsigned displacey = cbest;
 
 
     if (curr_x < dest_x) {//needs to go to the right
@@ -66,10 +82,19 @@ double TriangleDist::probability(unsigned lower, unsigned upper, unsigned x) {
     double midpt = (lower + upper) / 2.0;
     double n = (double)upper - lower;
     double exp = -1 * 4.0 / (n*n);
-    std::cout << exp << std::endl;
     exp *= std::abs(x - midpt);
-    std::cout << exp << std::endl;
-    exp += 2/n;
-    std::cout << exp << std::endl;
+    exp += 2.0/n;
+    //exp is the value of p(x) at the given point x
+    //now we need to get the actual area under p(x) from lower->x
+
+
+    if (x <= midpt) {//on the left side of the triangle
+        double dist = x - lower;
+        return exp * dist / 2;
+    }
+
+    //right side, we can calculate the probability by subtracting
+    double dist = upper-x;
+    return 1-(exp * dist/2);
     return exp;
 }

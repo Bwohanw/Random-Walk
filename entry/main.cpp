@@ -16,8 +16,9 @@ int main() {
     walk.setStart(0,0);
     walk.setDest(49,49);
 
-    walk.step();
-    walk.step();
+    for (int i = 0; i < 10; i++) {
+        walk.step();
+    }
     walk.draw("output.png");
 
     // Walk walk;

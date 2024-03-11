@@ -24,7 +24,7 @@ class TriangleDist : public Walk {
     TriangleDist(unsigned width, unsigned height);
 
 
-    bool step(); //defaults to between 1 and distance to the goal;
+    bool step(); //defaults to between 1 and distance to the goal; (right now is just between 1 and 10)
 
     //bool step(unsigned lowerbound, unsigned upperbound);
 
