@@ -8,19 +8,19 @@ TriangleDist::TriangleDist(unsigned width, unsigned height) : Walk(width, height
 
 bool TriangleDist::step() {
     unsigned lower = 1;
-    unsigned upper = 10;
+    unsigned xupper = std::abs((int)(dest_x) - (int)(curr_x));
 
-    double midpt = (lower + upper) / 2.0;
+    double xmidpt = (lower + xupper) / 2.0;
 
-    double n = upper - lower;
+    double n = xupper - lower;
 
     double prob = (rand() % 100) / 100.0;
 
 
     unsigned cbest = lower;
     double probbest = 0;
-    for (unsigned potential = lower; potential <= upper; potential++) {
-        double cprob = probability(lower, upper, potential);
+    for (unsigned potential = lower; potential <= xupper; potential++) {
+        double cprob = probability(lower, xupper, potential);
         if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
             cbest = potential;
             probbest = cprob;
@@ -31,13 +31,18 @@ bool TriangleDist::step() {
     unsigned displacex = cbest;
     //displace y
 
+    unsigned yupper = std::abs((int)(dest_y) - (int)(curr_y));
+    double ymidpt = (lower + yupper) / 2.0;
+    n = yupper - lower;
+
     prob = (rand() % 100) / 100.0;
+
 
 
     cbest = lower;
     probbest = 0;
-    for (unsigned potential = lower; potential <= upper; potential++) {
-        double cprob = probability(lower, upper, potential);
+    for (unsigned potential = lower; potential <= yupper; potential++) {
+        double cprob = probability(lower, yupper, potential);
         if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
             cbest = potential;
             probbest = cprob;

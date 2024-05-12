@@ -16,10 +16,13 @@ int main() {
     walk.setStart(0,0);
     walk.setDest(49,49);
 
-    for (int i = 0; i < 10; i++) {
-        walk.step();
+    for (int i = 0; i < 100; i++) {
+        if (!walk.check_status()) walk.step();
+        else break;
     }
     walk.draw("output.png");
+
+    if (walk.check_status()) std::cout << "reached" << std::endl;
 
     // Walk walk;
     // walk.setStart(0,0);
