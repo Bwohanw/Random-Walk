@@ -6,21 +6,19 @@ TriangleDist::TriangleDist() : Walk() {}
 TriangleDist::TriangleDist(unsigned width, unsigned height) : Walk(width, height) {}
 
 
-bool TriangleDist::step() {
-    unsigned lower = 1;
-    unsigned xupper = std::abs((int)(dest_x) - (int)(curr_x));
+bool TriangleDist::step(unsigned xlower, unsigned xupper, unsigned ylower, unsigned yupper) {
 
-    double xmidpt = (lower + xupper) / 2.0;
+    double xmidpt = (xlower + xupper) / 2.0;
 
-    double n = xupper - lower;
+    double n = xupper - xlower;
 
     double prob = (rand() % 100) / 100.0;
 
 
-    unsigned cbest = lower;
+    unsigned cbest = xlower;
     double probbest = 0;
-    for (unsigned potential = lower; potential <= xupper; potential++) {
-        double cprob = probability(lower, xupper, potential);
+    for (unsigned potential = xlower; potential <= xupper; potential++) {
+        double cprob = probability(xlower, xupper, potential);
         if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
             cbest = potential;
             probbest = cprob;
@@ -30,19 +28,17 @@ bool TriangleDist::step() {
 
     unsigned displacex = cbest;
     //displace y
-
-    unsigned yupper = std::abs((int)(dest_y) - (int)(curr_y));
-    double ymidpt = (lower + yupper) / 2.0;
-    n = yupper - lower;
+    double ymidpt = (ylower + yupper) / 2.0;
+    n = yupper - ylower;
 
     prob = (rand() % 100) / 100.0;
 
 
 
-    cbest = lower;
+    cbest = ylower;
     probbest = 0;
-    for (unsigned potential = lower; potential <= yupper; potential++) {
-        double cprob = probability(lower, yupper, potential);
+    for (unsigned potential = ylower; potential <= yupper; potential++) {
+        double cprob = probability(ylower, yupper, potential);
         if (std::abs(cprob - prob) < std::abs(probbest - prob)) {
             cbest = potential;
             probbest = cprob;
@@ -79,6 +75,19 @@ bool TriangleDist::step() {
 
 
     return check_status();
+}
+
+bool TriangleDist::step(unsigned xupper, unsigned yupper) {
+    unsigned lower = 1;
+    return step(lower, xupper, lower, yupper);
+}
+
+bool TriangleDist::step() {
+    unsigned lower = 1;
+    unsigned xupper = std::abs((int)(dest_x) - (int)(curr_x));
+    unsigned yupper = std::abs((int)(dest_y) - (int)(curr_y));
+
+    return step(lower, xupper, lower, yupper);
 
 }
 
